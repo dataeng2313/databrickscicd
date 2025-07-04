@@ -41,7 +41,7 @@ jobs:
       run: |
         DATABRICKS_CONFIG_FILE=~/.databricks/dev_config \
         databricks workspace export_dir \
-        "/Workspace/Users/seema.sinha231325@gmail.com/databrickscicd" \
+        "/Workspace/Users/seema.sinha231325@gmail.com/databricks-practice" \
         ./exported_notebooks --overwrite
 
     - name: Configure CLI for QA
