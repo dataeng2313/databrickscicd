@@ -1,0 +1,42 @@
+name: Deploy Notebooks from Dev to QA
+
+on:
+  push:
+    branches:
+      - qa  # or your desired branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Install Databricks CLI
+      run: pip install databricks-cli
+
+    - name: Configure CLI for Dev
+      run: |
+        mkdir -p ~/.databricks
+        cat <<EOF > ~/.databricks/dev_config
+        [DEFAULT]
+        host = ${{ secrets.DATABRICKS_HOST_DEV }}
+        token = ${{ secrets.DATABRICKS_TOKEN_DEV }}
+        EOF
+
+    - name: Export Notebooks from Dev
+      run: |
+        DATABRICKS_CONFIG_FILE=~/.databricks/dev_config databricks workspace export-dir "/Workspace/Users/seema.sinha231325@gmail.com/databrickscicd" ./exported_notebooks --overwrite
+
+    - name: Configure CLI for QA
+      run: |
+        cat <<EOF > ~/.databricks/qa_config
+        [DEFAULT]
+        host = ${{ secrets.DATABRICKS_HOST_QA }}
+        token = ${{ secrets.DATABRICKS_TOKEN_QA }}
+        EOF
+
+    - name: Import Notebooks to QA
+      run: |
+        DATABRICKS_CONFIG_FILE=~/.databricks/qa_config databricks workspace import-dir ./exported_notebooks "/Workspace/Users/seema.sinha231325@gmail.com/QA" --overwrite
