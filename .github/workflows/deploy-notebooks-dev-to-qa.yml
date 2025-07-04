@@ -20,6 +20,7 @@ jobs:
 
     - name: Install Legacy Databricks CLI
       run: |
+        pip install "urllib3<2.0"
         pip uninstall -y databricks  # Remove the new CLI if pre-installed
         pip install databricks-cli==0.17.6
 
