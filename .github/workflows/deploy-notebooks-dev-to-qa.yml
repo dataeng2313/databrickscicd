@@ -19,7 +19,13 @@ jobs:
         python-version: '3.10'
 
     - name: Install Legacy Databricks CLI
-      run: pip install databricks-cli==0.17.6
+      run: |
+        pip uninstall -y databricks  # Remove the new CLI if pre-installed
+        pip install databricks-cli==0.17.6
+
+    - name: Check Databricks CLI Version
+      run: databricks --version
+
 
     - name: Configure CLI for Dev
       run: |
@@ -33,7 +39,7 @@ jobs:
     - name: Export Notebooks from Dev
       run: |
         DATABRICKS_CONFIG_FILE=~/.databricks/dev_config \
-         python3 -m databricks_cli.workspace export_dir \
+        databricks workspace export_dir \
         "/Workspace/Users/seema.sinha231325@gmail.com/databrickscicd" \
         ./exported_notebooks --overwrite
 
@@ -48,6 +54,6 @@ jobs:
     - name: Import Notebooks to QA
       run: |
         DATABRICKS_CONFIG_FILE=~/.databricks/qa_config \
-         python3 -m databricks_cli.workspace import_dir  \
-        ./exported_notebooks \
+         databricks workspace import_dir  \
+        ./Imported_notebooks \
         "/Workspace/Users/seema.sinha231325@gmail.com/QA" --overwrite
