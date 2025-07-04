@@ -56,4 +56,5 @@ jobs:
       run: |
         DATABRICKS_CONFIG_FILE=~/.databricks/qa_config \
          databricks workspace import_dir  \
-        "/Workspace/Users/seema.sinha231325@gmail.com/QA" --overwrite
+         ./exported_notebooks \
+         "/Workspace/Users/seema.sinha231325@gmail.com/QA" --overwrite
