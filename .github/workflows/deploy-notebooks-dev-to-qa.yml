@@ -33,7 +33,7 @@ jobs:
     - name: Export Notebooks from Dev
       run: |
         DATABRICKS_CONFIG_FILE=~/.databricks/dev_config \
-         python3 -m databricks_cli.workspace export_dir workspace export-dir \
+         python3 -m databricks_cli.workspace export_dir \
         "/Workspace/Users/seema.sinha231325@gmail.com/databrickscicd" \
         ./exported_notebooks --overwrite
 
@@ -48,6 +48,6 @@ jobs:
     - name: Import Notebooks to QA
       run: |
         DATABRICKS_CONFIG_FILE=~/.databricks/qa_config \
-         python3 -m databricks_cli.workspace export_dir workspace import-dir \
+         python3 -m databricks_cli.workspace import_dir  \
         ./exported_notebooks \
         "/Workspace/Users/seema.sinha231325@gmail.com/QA" --overwrite
