@@ -3,7 +3,7 @@ name: Deploy Notebooks from Dev to QA
 on:
   push:
     branches:
-      - qa  # or your desired branch
+      - main
 
 jobs:
   deploy:
@@ -13,8 +13,13 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v3
 
-    - name: Install Databricks CLI
-      run: pip install databricks-cli
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Install Legacy Databricks CLI
+      run: pip install databricks-cli==0.17.6
 
     - name: Configure CLI for Dev
       run: |
@@ -27,7 +32,10 @@ jobs:
 
     - name: Export Notebooks from Dev
       run: |
-        DATABRICKS_CONFIG_FILE=~/.databricks/dev_config databricks workspace export-dir "/Workspace/Users/seema.sinha231325@gmail.com/databrickscicd" ./exported_notebooks --overwrite
+        DATABRICKS_CONFIG_FILE=~/.databricks/dev_config \
+        databricks workspace export-dir \
+        "/Workspace/Users/seema.sinha231325@gmail.com/databrickscicd" \
+        ./exported_notebooks --overwrite
 
     - name: Configure CLI for QA
       run: |
@@ -39,4 +47,7 @@ jobs:
 
     - name: Import Notebooks to QA
       run: |
-        DATABRICKS_CONFIG_FILE=~/.databricks/qa_config databricks workspace import-dir ./exported_notebooks "/Workspace/Users/seema.sinha231325@gmail.com/QA" --overwrite
+        DATABRICKS_CONFIG_FILE=~/.databricks/qa_config \
+        databricks workspace import-dir \
+        ./exported_notebooks \
+        "/Workspace/Users/seema.sinha231325@gmail.com/QA" --overwrite
